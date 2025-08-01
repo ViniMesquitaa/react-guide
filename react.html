@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Completo de React Hooks</title>
+    <style>
+        :root {
+            --primary: #61dafb;
+            --secondary: #282c34;
+            --accent: #ff6b6b;
+            --text: #333;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        header {
+            background-color: var(--secondary);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2, h3 {
+            color: var(--secondary);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        h2 {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        h3 {
+            margin-top: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .hook-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .hook-card h3 {
+            margin-top: 0;
+        }
+        
+        .hook-syntax {
+            background-color: var(--secondary);
+            color: var(--light);
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .example {
+            background-color: #f8f9fa;
+            border-left: 3px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #e9ecef;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: var(--danger);
+        }
+        
+        pre {
+            background-color: var(--secondary);
+            color: var(--light);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            tab-size: 2;
+        }
+        
+        .tip {
+            background-color: #e6f7ff;
+            border-left: 3px solid var(--primary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            border-left: 3px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .comparison-table th {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            background-color: var(--primary);
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Guia Completo de React Hooks</h1>
+        <p>Tudo o que você precisa saber sobre Hooks no React - Teoria, Prática e Melhores Práticas</p>
+    </header>
+
+    <section>
+        <h2>Introdução aos Hooks</h2>
+        <p>Hooks são uma adição ao React 16.8 que permitem que você use estado e outros recursos do React sem escrever classes. Eles resolvem vários problemas encontrados em componentes de classe, como reutilização de lógica com estado e complexidade em componentes grandes.</p>
+        
+        <div class="tip">
+            <strong>Por que usar Hooks?</strong>
+            <ul>
+                <li>Simplificam a reutilização de lógica com estado entre componentes</li>
+                <li>Permitem dividir componentes em funções menores baseadas em pedaços relacionados</li>
+                <li>Eliminam a necessidade de classes, simplificando o código</li>
+                <li>Reduzem a complexidade de componentes grandes</li>
+            </ul>
+        </div>
+        
+        <h3>Regras dos Hooks</h3>
+        <ol>
+            <li><strong>Só chame Hooks no nível mais alto</strong> - Não chame Hooks dentro de loops, condições ou funções aninhadas</li>
+            <li><strong>Só chame Hooks de componentes React</strong> - Não chame Hooks de funções JavaScript comuns</li>
+        </ol>
+        
+        <div class="warning">
+            <strong>Importante:</strong> O React confia na ordem em que os Hooks são chamados para preservar o estado entre múltiplas chamadas. Violar as regras dos Hooks pode levar a bugs.
+        </div>
+    </section>
+
+    <section>
+        <h2>Hooks Básicos</h2>
+        
+        <div class="hook-card">
+            <h3>useState</h3>
+            <p>Permite adicionar estado local a componentes funcionais.</p>
+            
+            <div class="hook-syntax">
+                const [state, setState] = useState(initialState);
+            </div>
+            
+            <p><strong>Parâmetros:</strong></p>
+            <ul>
+                <li><code>initialState</code>: O valor inicial do estado (pode ser um valor ou função)</li>
+            </ul>
+            
+            <p><strong>Retorna:</strong></p>
+            <ul>
+                <li><code>state</code>: O valor atual do estado</li>
+                <li><code>setState</code>: Função para atualizar o estado</li>
+            </ul>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Contador</div>
+                <pre><code>import React, { useState } from 'react';
+
+function Counter() {
+    const [count, setCount] = useState(0);
+
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Você clicou {count} vezes&lt;/p&gt;
+            &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+                Clique aqui
+            &lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+            
+            <div class="tip">
+                <strong>Dica:</strong> Quando o novo estado depende do anterior, passe uma função para <code>setState</code>:
+                <pre><code>setCount(prevCount =&gt; prevCount + 1);</code></pre>
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useEffect</h3>
+            <p>Permite executar efeitos colaterais em componentes funcionais (substitui <code>componentDidMount</code>, <code>componentDidUpdate</code> e <code>componentWillUnmount</code>).</p>
+            
+            <div class="hook-syntax">
+                useEffect(() =&gt; {
+                    // Efeito colateral
+                    return () =&gt; {
+                        // Limpeza (opcional)
+                    };
+                }, [dependencies]);
+            </div>
+            
+            <p><strong>Parâmetros:</strong></p>
+            <ul>
+                <li><code>effect</code>: Função que contém o efeito colateral</li>
+                <li><code>dependencies</code> (opcional): Array de dependências que determina quando o efeito é executado</li>
+            </ul>
+            
+            <p><strong>Comportamentos:</strong></p>
+            <ul>
+                <li><strong>Sem array de dependências:</strong> Executa após cada renderização</li>
+                <li><strong>Array vazio:</strong> Executa apenas no mount (equivalente a componentDidMount)</li>
+                <li><strong>Com dependências:</strong> Executa quando qualquer dependência muda</li>
+            </ul>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Buscar dados de API</div>
+                <pre><code>import React, { useState, useEffect } from 'react';
+
+function UserProfile({ userId }) {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() =&gt; {
+        let isMounted = true;
+        
+        async function fetchUser() {
+            try {
+                const response = await fetch(`/api/users/${userId}`);
+                const data = await response.json();
+                if (isMounted) {
+                    setUser(data);
+                    setLoading(false);
+                }
+            } catch (error) {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        fetchUser();
+
+        return () =&gt; {
+            isMounted = false; // Evita atualizar estado após desmontar
+        };
+    }, [userId]); // Re-executa quando userId muda
+
+    if (loading) return &lt;div&gt;Carregando...&lt;/div&gt;;
+    if (!user) return &lt;div&gt;Usuário não encontrado&lt;/div&gt;;
+
+    return (
+        &lt;div&gt;
+            &lt;h2&gt;{user.name}&lt;/h2&gt;
+            &lt;p&gt;Email: {user.email}&lt;/p&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+            
+            <div class="warning">
+                <strong>Atenção:</strong> Sempre inclua todas as dependências que seu efeito usa. Ignorar isso pode levar a bugs sutis.
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useContext</h3>
+            <p>Permite acessar o valor de um contexto React sem precisar de Consumer.</p>
+            
+            <div class="hook-syntax">
+                const value = useContext(MyContext);
+            </div>
+            
+            <p><strong>Parâmetros:</strong></p>
+            <ul>
+                <li><code>MyContext</code>: O objeto de contexto criado com <code>React.createContext</code></li>
+            </ul>
+            
+            <p><strong>Retorna:</strong></p>
+            <ul>
+                <li>O valor atual do contexto</li>
+            </ul>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Tema com Contexto</div>
+                <pre><code>import React, { useContext, createContext, useState } from 'react';
+
+// Criar contexto
+const ThemeContext = createContext();
+
+function ThemeProvider({ children }) {
+    const [theme, setTheme] = useState('light');
+
+    const toggleTheme = () =&gt; {
+        setTheme(prevTheme =&gt; prevTheme === 'light' ? 'dark' : 'light');
+    };
+
+    return (
+        &lt;ThemeContext.Provider value={{ theme, toggleTheme }}&gt;
+            {children}
+        &lt;/ThemeContext.Provider&gt;
+    );
+}
+
+function ThemedButton() {
+    const { theme, toggleTheme } = useContext(ThemeContext);
+    
+    return (
+        &lt;button 
+            onClick={toggleTheme}
+            style={{
+                background: theme === 'light' ? '#fff' : '#333',
+                color: theme === 'light' ? '#333' : '#fff'
+            }}
+        &gt;
+            Alternar Tema
+        &lt;/button&gt;
+    );
+}
+
+function App() {
+    return (
+        &lt;ThemeProvider&gt;
+            &lt;ThemedButton /&gt;
+        &lt;/ThemeProvider&gt;
+    );
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Hooks Adicionais</h2>
+        
+        <div class="hook-card">
+            <h3>useReducer</h3>
+            <p>Uma alternativa ao <code>useState</code> para gerenciar estado complexo. Ideal quando a próxima estado depende do anterior ou quando há lógica complexa de atualização.</p>
+            
+            <div class="hook-syntax">
+                const [state, dispatch] = useReducer(reducer, initialArg, init);
+            </div>
+            
+            <p><strong>Parâmetros:</strong></p>
+            <ul>
+                <li><code>reducer</code>: Função que especifica como o estado é atualizado (recebe state e action)</li>
+                <li><code>initialArg</code>: Valor inicial do estado</li>
+                <li><code>init</code> (opcional): Função para inicialização preguiçosa do estado</li>
+            </ul>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Gerenciador de Tarefas</div>
+                <pre><code>import React, { useReducer } from 'react';
+
+const initialState = { todos: [], input: '' };
+
+function reducer(state, action) {
+    switch (action.type) {
+        case 'ADD_TODO':
+            return {
+                ...state,
+                input: '',
+                todos: [...state.todos, action.payload]
+            };
+        case 'SET_INPUT':
+            return { ...state, input: action.payload };
+        case 'REMOVE_TODO':
+            return {
+                ...state,
+                todos: state.todos.filter((_, index) =&gt; index !== action.payload)
+            };
+        default:
+            return state;
+    }
+}
+
+function TodoApp() {
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const handleSubmit = e =&gt; {
+        e.preventDefault();
+        if (state.input.trim()) {
+            dispatch({ type: 'ADD_TODO', payload: state.input });
+        }
+    };
+
+    return (
+        &lt;div&gt;
+            &lt;form onSubmit={handleSubmit}&gt;
+                &lt;input
+                    value={state.input}
+                    onChange={e =&gt; 
+                        dispatch({ type: 'SET_INPUT', payload: e.target.value })
+                    }
+                /&gt;
+                &lt;button type="submit"&gt;Adicionar&lt;/button&gt;
+            &lt;/form&gt;
+            
+            &lt;ul&gt;
+                {state.todos.map((todo, index) =&gt; (
+                    &lt;li key={index}&gt;
+                        {todo}
+                        &lt;button onClick={() =&gt; 
+                            dispatch({ type: 'REMOVE_TODO', payload: index })
+                        }&gt;
+                            Remover
+                        &lt;/button&gt;
+                    &lt;/li&gt;
+                ))}
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+            
+            <div class="tip">
+                <strong>Quando usar useReducer vs useState:</strong>
+                <ul>
+                    <li><strong>useState:</strong> Estado simples, atualizações independentes</li>
+                    <li><strong>useReducer:</strong> Estado complexo, lógica de atualização elaborada, próximos estados dependem dos anteriores</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useCallback</h3>
+            <p>Memoiza uma função, evitando recriações desnecessárias em cada renderização. Útil para otimizar performance quando passamos callbacks para componentes filhos otimizados.</p>
+            
+            <div class="hook-syntax">
+                const memoizedCallback = useCallback(
+                    () =&gt; {
+                        // Função memoizada
+                    },
+                    [dependencies]
+                );
+            </div>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Lista Otimizada</div>
+                <pre><code>import React, { useState, useCallback } from 'react';
+import ExpensiveChildComponent from './ExpensiveChildComponent';
+
+function ParentComponent() {
+    const [count, setCount] = useState(0);
+    const [items, setItems] = useState([]);
+
+    // Sem useCallback, essa função seria recriada em cada renderização
+    const addItem = useCallback(() =&gt; {
+        setItems(prevItems =&gt; [...prevItems, `Item ${prevItems.length + 1}`]);
+    }, []); // Nenhuma dependência - função nunca muda
+
+    return (
+        &lt;div&gt;
+            &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
+                Renderizar Pai ({count})
+            &lt;/button&gt;
+            
+            &lt;ExpensiveChildComponent items={items} onAddItem={addItem} /&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+            
+            <div class="warning">
+                <strong>Não use useCallback prematuramente:</strong> Só use quando tiver problemas de performance identificados. O overhead de usar useCallback pode ser maior que o benefício em muitos casos.
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useMemo</h3>
+            <p>Memoiza um valor calculado, evitando recálculos desnecessários. Similar ao useCallback, mas para valores em vez de funções.</p>
+            
+            <div class="hook-syntax">
+                const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);
+            </div>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Cálculo Pesado</div>
+                <pre><code>import React, { useState, useMemo } from 'react';
+
+function ExpensiveCalculation({ a, b }) {
+    const result = useMemo(() =&gt; {
+        console.log('Calculando...');
+        // Simula um cálculo pesado
+        let sum = 0;
+        for (let i = 0; i &lt; 1000000000; i++) {
+            sum += a * b;
+        }
+        return sum;
+    }, [a, b]); // Só recalcula quando a ou b mudam
+
+    return &lt;div&gt;Resultado: {result}&lt;/div&gt;;
+}
+
+function App() {
+    const [a, setA] = useState(1);
+    const [b, setB] = useState(2);
+    const [counter, setCounter] = useState(0);
+
+    return (
+        &lt;div&gt;
+            &lt;ExpensiveCalculation a={a} b={b} /&gt;
+            &lt;button onClick={() =&gt; setCounter(c =&gt; c + 1)}&gt;
+                Renderizar ({counter})
+            &lt;/button&gt;
+            &lt;button onClick={() =&gt; setA(a + 1)}&gt;Incrementar A&lt;/button&gt;
+            &lt;button onClick={() =&gt; setB(b + 1)}&gt;Incrementar B&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+            
+            <div class="tip">
+                <strong>Diferença entre useMemo e useCallback:</strong>
+                <ul>
+                    <li><strong>useMemo:</strong> Memoiza o resultado de uma função</li>
+                    <li><strong>useCallback:</strong> Memoiza a função em si</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useRef</h3>
+            <p>Cria uma referência mutável que persiste durante todo o ciclo de vida do componente. Útil para acessar elementos DOM diretamente ou manter valores mutáveis sem causar re-renderizações.</p>
+            
+            <div class="hook-syntax">
+                const refContainer = useRef(initialValue);
+            </div>
+            
+            <div class="example">
+                <div class="example-title">Exemplo 1: Acessando Elemento DOM</div>
+                <pre><code>import React, { useRef } from 'react';
+
+function TextInputWithFocusButton() {
+    const inputEl = useRef(null);
+    
+    const onButtonClick = () =&gt; {
+        // `current` aponta para o elemento de input montado
+        inputEl.current.focus();
+    };
+    
+    return (
+        &lt;div&gt;
+            &lt;input ref={inputEl} type="text" /&gt;
+            &lt;button onClick={onButtonClick}&gt;Focar no input&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+                
+                <div class="example-title">Exemplo 2: Armazenando Valor Mutável</div>
+                <pre><code>import React, { useState, useEffect, useRef } from 'react';
+
+function Timer() {
+    const [count, setCount] = useState(0);
+    const intervalRef = useRef();
+    
+    useEffect(() =&gt; {
+        intervalRef.current = setInterval(() =&gt; {
+            setCount(prevCount =&gt; prevCount + 1);
+        }, 1000);
+        
+        return () =&gt; clearInterval(intervalRef.current);
+    }, []);
+    
+    const stopTimer = () =&gt; {
+        clearInterval(intervalRef.current);
+    };
+    
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Contador: {count}&lt;/p&gt;
+            &lt;button onClick={stopTimer}&gt;Parar&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useImperativeHandle</h3>
+            <p>Permite personalizar a instância que é exposta quando se usa <code>ref</code> em componentes filhos. Usado em conjunto com <code>forwardRef</code>.</p>
+            
+            <div class="hook-syntax">
+                useImperativeHandle(ref, () =&gt; ({
+                    // Métodos expostos
+                }), [dependencies]);
+            </div>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Componente de Input Personalizado</div>
+                <pre><code>import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+
+const FancyInput = forwardRef((props, ref) =&gt; {
+    const inputRef = useRef();
+    
+    useImperativeHandle(ref, () =&gt; ({
+        focus: () =&gt; {
+            inputRef.current.focus();
+        },
+        shake: () =&gt; {
+            inputRef.current.style.transform = 'translateX(10px)';
+            setTimeout(() =&gt; {
+                inputRef.current.style.transform = '';
+            }, 500);
+        }
+    }));
+    
+    return &lt;input ref={inputRef} {...props} /&gt;;
+});
+
+function Parent() {
+    const fancyInputRef = useRef();
+    
+    const handleClick = () =&gt; {
+        fancyInputRef.current.focus();
+        fancyInputRef.current.shake();
+    };
+    
+    return (
+        &lt;div&gt;
+            &lt;FancyInput ref={fancyInputRef} /&gt;
+            &lt;button onClick={handleClick}&gt;Focar e Sacudir&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+            
+            <div class="warning">
+                <strong>Use com moderação:</strong> Este Hook deve ser usado raramente. Na maioria dos casos, prefira props em vez de manipulação imperativa.
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useLayoutEffect</h3>
+            <p>Assinatura idêntica ao <code>useEffect</code>, mas dispara sincronamente após todas as mutações no DOM. Use para ler layout do DOM e fazer re-renderizações sincronizadas.</p>
+            
+            <div class="hook-syntax">
+                useLayoutEffect(() =&gt; {
+                    // Código de efeito
+                    return () =&gt; {
+                        // Limpeza
+                    };
+                }, [dependencies]);
+            </div>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Medindo Elemento</div>
+                <pre><code>import React, { useState, useLayoutEffect, useRef } from 'react';
+
+function MeasureExample() {
+    const [width, setWidth] = useState(0);
+    const ref = useRef();
+    
+    useLayoutEffect(() =&gt; {
+        if (ref.current) {
+            setWidth(ref.current.getBoundingClientRect().width);
+        }
+    }, []);
+    
+    return (
+        &lt;div ref={ref}&gt;
+            &lt;p&gt;Largura deste elemento: {Math.round(width)}px&lt;/p&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+            </div>
+            
+            <div class="tip">
+                <strong>Diferença entre useEffect e useLayoutEffect:</strong>
+                <ul>
+                    <li><strong>useEffect:</strong> Assíncrono, não bloqueia a pintura do navegador</li>
+                    <li><strong>useLayoutEffect:</strong> Síncrono, executa antes da pintura (como componentDidMount/DidUpdate)</li>
+                </ul>
+                Prefira useEffect na maioria dos casos, use useLayoutEffect apenas quando precisar medir o DOM.
+            </div>
+        </div>
+        
+        <div class="hook-card">
+            <h3>useDebugValue</h3>
+            <p>Permite exibir um rótulo para Hooks personalizados nas ferramentas de desenvolvimento do React.</p>
+            
+            <div class="hook-syntax">
+                useDebugValue(value, format);
+            </div>
+            
+            <div class="example">
+                <div class="example-title">Exemplo: Hook Personalizado com Debug</div>
+                <pre><code>import { useState, useEffect, useDebugValue } from 'react';
+
+function useOnlineStatus() {
+    const [isOnline, setIsOnline] = useState(navigator.onLine);
+    
+    useEffect(() =&gt; {
+        function handleOnline() { setIsOnline(true); }
+        function handleOffline() { setIsOnline(false); }
+        
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+        
+        return () =&gt; {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
+    
+    useDebugValue(isOnline ? 'Online' : 'Offline');
+    
+    return isOnline;
+}
+
+// Nas ferramentas de desenvolvimento, o hook aparecerá como:
+// useOnlineStatus: "Online" (ou "Offline")
+</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Hooks Personalizados</h2>
+        <p>Hooks personalizados permitem extrair lógica de componentes em funções reutilizáveis.</p>
+        
+        <div class="example">
+            <div class="example-title">Exemplo: Hook useFetch</div>
+            <pre><code>import { useState, useEffect } from 'react';
+
+function useFetch(url, options = {}) {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() =&gt; {
+        let isMounted = true;
+        
+        async function fetchData() {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error(response.statusText);
+                
+                const result = await response.json();
+                if (isMounted) {
+                    setData(result);
+                    setError(null);
+                }
+            } catch (err) {
+                if (isMounted) {
+                    setError(err.message);
+                    setData(null);
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        }
+        
+        fetchData();
+        
+        return () =&gt; {
+            isMounted = false;
+        };
+    }, [url, options]);
+    
+    return { data, error, loading };
+}
+
+// Uso em um componente
+function UserProfile({ userId }) {
+    const { data: user, error, loading } = useFetch(`/api/users/${userId}`);
+    
+    if (loading) return &lt;div&gt;Carregando...&lt;/div&gt;;
+    if (error) return &lt;div&gt;Erro: {error}&lt;/div&gt;;
+    
+    return (
+        &lt;div&gt;
+            &lt;h2&gt;{user.name}&lt;/h2&gt;
+            &lt;p&gt;Email: {user.email}&lt;/p&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+        </div>
+        
+        <h3>Mais Exemplos de Hooks Personalizados Úteis</h3>
+        
+        <div class="example">
+            <div class="example-title">useLocalStorage</div>
+            <pre><code>import { useState, useEffect } from 'react';
+
+function useLocalStorage(key, initialValue) {
+    const [storedValue, setStoredValue] = useState(() =&gt; {
+        try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+        } catch (error) {
+            console.error(error);
+            return initialValue;
+        }
+    });
+    
+    const setValue = value =&gt; {
+        try {
+            const valueToStore = 
+                value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
+    return [storedValue, setValue];
+}
+
+// Uso:
+function App() {
+    const [name, setName] = useLocalStorage('name', '');
+    
+    return (
+        &lt;input 
+            type="text" 
+            value={name} 
+            onChange={e =&gt; setName(e.target.value)}
+            placeholder="Digite seu nome"
+        /&gt;
+    );
+}</code></pre>
+        </div>
+        
+        <div class="example">
+            <div class="example-title">useWindowSize</div>
+            <pre><code>import { useState, useEffect } from 'react';
+
+function useWindowSize() {
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+    
+    useEffect(() =&gt; {
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
+        
+        window.addEventListener('resize', handleResize);
+        return () =&gt; window.removeEventListener('resize', handleResize);
+    }, []);
+    
+    return windowSize;
+}
+
+// Uso:
+function ResponsiveComponent() {
+    const { width } = useWindowSize();
+    const isMobile = width &lt; 768;
+    
+    return (
+        &lt;div&gt;
+            {isMobile ? &lt;MobileView /&gt; : &lt;DesktopView /&gt;}
+        &lt;/div&gt;
+    );
+}</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Padrões Avançados com Hooks</h2>
+        
+        <h3>Composição de Hooks</h3>
+        <p>Você pode compor múltiplos hooks para criar comportamentos complexos:</p>
+        
+        <div class="example">
+            <pre><code>function useUserData(userId) {
+    const { data: user, loading: userLoading, error: userError } = useFetch(`/users/${userId}`);
+    const { data: posts, loading: postsLoading, error: postsError } = useFetch(`/users/${userId}/posts`);
+    
+    return {
+        user,
+        posts,
+        loading: userLoading || postsLoading,
+        error: userError || postsError
+    };
+}</code></pre>
+        </div>
+        
+        <h3>Hooks para Gerenciamento de Estado Global</h3>
+        <p>Você pode criar um sistema simples de estado global combinando useContext e useReducer:</p>
+        
+        <div class="example">
+            <pre><code>import React, { createContext, useContext, useReducer } from 'react';
+
+const StateContext = createContext();
+
+export function StateProvider({ reducer, initialState, children }) {
+    return (
+        &lt;StateContext.Provider value={useReducer(reducer, initialState)}&gt;
+            {children}
+        &lt;/StateContext.Provider&gt;
+    );
+}
+
+export function useStateValue() {
+    return useContext(StateContext);
+}
+
+// reducer.js
+export const initialState = {
+    user: null,
+    theme: 'light',
+    notifications: []
+};
+
+export function reducer(state, action) {
+    switch (action.type) {
+        case 'SET_USER':
+            return { ...state, user: action.user };
+        case 'TOGGLE_THEME':
+            return { ...state, theme: state.theme === 'light' ? 'dark' : 'light' };
+        case 'ADD_NOTIFICATION':
+            return { ...state, notifications: [...state.notifications, action.notification] };
+        default:
+            return state;
+    }
+}
+
+// App.js
+import { StateProvider, initialState, reducer } from './state';
+
+function App() {
+    return (
+        &lt;StateProvider reducer={reducer} initialState={initialState}&gt;
+            &lt;MainApp /&gt;
+        &lt;/StateProvider&gt;
+    );
+}
+
+// Qualquer componente filho
+function UserProfile() {
+    const [state, dispatch] = useStateValue();
+    
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Usuário: {state.user?.name || 'Anônimo'}&lt;/p&gt;
+            &lt;button onClick={() =&gt; dispatch({ type: 'TOGGLE_THEME' })}&gt;
+                Alternar Tema
+            &lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Comparação: Hooks vs Classes</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Recurso</th>
+                    <th>Componentes de Classe</th>
+                    <th>Componentes com Hooks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Estado</td>
+                    <td><code>this.state</code> e <code>this.setState</code></td>
+                    <td><code>useState</code> ou <code>useReducer</code></td>
+                </tr>
+                <tr>
+                    <td>Ciclo de Vida</td>
+                    <td><code>componentDidMount</code>, <code>componentDidUpdate</code>, etc.</td>
+                    <td><code>useEffect</code></td>
+                </tr>
+                <tr>
+                    <td>Contexto</td>
+                    <td><code>static contextType</code> ou <code>Context.Consumer</code></td>
+                    <td><code>useContext</code></td>
+                </tr>
+                <tr>
+                    <td>Reutilização de Lógica</td>
+                    <td>Render Props, HOCs, Mixins (antigo)</td>
+                    <td>Hooks Personalizados</td>
+                </tr>
+                <tr>
+                    <td>Performance</td>
+                    <td>PureComponent, shouldComponentUpdate</td>
+                    <td><code>React.memo</code>, <code>useMemo</code>, <code>useCallback</code></td>
+                </tr>
+                <tr>
+                    <td>Referências</td>
+                    <td><code>createRef</code></td>
+                    <td><code>useRef</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Melhores Práticas com Hooks</h2>
+        
+        <h3>1. Organização de Hooks no Componente</h3>
+        <p>Siga esta ordem recomendada para melhor legibilidade:</p>
+        <ol>
+            <li>Chamadas de useState</li>
+            <li>Chamadas de useReducer</li>
+            <li>Chamadas de useContext</li>
+            <li>Chamadas de useRef</li>
+            <li>Chamadas de useEffect</li>
+            <li>Chamadas de useMemo/useCallback</li>
+            <li>Outros hooks personalizados</li>
+        </ol>
+        
+        <h3>2. Nomeando Hooks Personalizados</h3>
+        <p>Sempre comece com <code>use</code> para que o React possa verificar automaticamente as regras dos Hooks:</p>
+        <pre><code>// Bom
+function useFetch(url) { ... }
+
+// Ruim (não segue a convenção)
+function getData(url) { ... }</code></pre>
+        
+        <h3>3. Dependências do useEffect</h3>
+        <p>Sempre seja explícito sobre as dependências. Se você estiver usando um valor no efeito, ele deve estar na lista de dependências.</p>
+        
+        <div class="warning">
+            <strong>Problema comum:</strong> Esquecer dependências pode levar a bugs sutis. Se precisar omitir uma dependência, pergunte-se por que e se há uma maneira melhor.
+        </div>
+        
+        <h3>4. Quando Criar Hooks Personalizados</h3>
+        <p>Crie um hook personalizado quando:</p>
+        <ul>
+            <li>Você está repetindo a mesma lógica em vários componentes</li>
+            <li>A lógica é complexa o suficiente para merecer isolamento</li>
+            <li>Você quer tornar o código mais legível ao extrair lógica relacionada</li>
+        </ul>
+        
+        <h3>5. Evite Efeitos Colaterais no Render</h3>
+        <p>Não execute operações com efeitos colaterais durante a renderização. Use useEffect para isso.</p>
+        
+        <div class="example">
+            <div class="example-title">Ruim (efeito colateral durante renderização)</div>
+            <pre><code>function BadExample() {
+    const [data, setData] = useState(null);
+    
+    // ⚠️ Isso é ruim - efeito colateral durante renderização
+    fetch('/api/data').then(response =&gt; setData(response.json()));
+    
+    return &lt;div&gt;{data}&lt;/div&gt;;
+}</code></pre>
+            
+            <div class="example-title">Bom (efeito colateral em useEffect)</div>
+            <pre><code>function GoodExample() {
+    const [data, setData] = useState(null);
+    
+    useEffect(() =&gt; {
+        fetch('/api/data').then(response =&gt; setData(response.json()));
+    }, []);
+    
+    return &lt;div&gt;{data}&lt;/div&gt;;
+}</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Perguntas Frequentes sobre Hooks</h2>
+        
+        <h3>1. Posso usar Hooks em componentes de classe?</h3>
+        <p><strong>Não.</strong> Hooks só funcionam em componentes funcionais. Mas você pode misturar componentes com classes e componentes com Hooks na mesma aplicação.</p>
+        
+        <h3>2. Como testar componentes com Hooks?</h3>
+        <p>Componentes com Hooks podem ser testados da mesma forma que componentes regulares. Bibliotecas como React Testing Library funcionam perfeitamente com Hooks.</p>
+        
+        <div class="example">
+            <div class="example-title">Exemplo de Teste</div>
+            <pre><code>import { render, screen, fireEvent } from '@testing-library/react';
+import Counter from './Counter';
+
+test('increments counter', () =&gt; {
+    render(&lt;Counter /&gt;);
+    const button = screen.getByText(/clicou 0 vezes/i);
+    fireEvent.click(button);
+    expect(button).toHaveTextContent('clicou 1 vez');
+});</code></pre>
+        </div>
+        
+        <h3>3. Hooks substituem completamente Redux?</h3>
+        <p>Não necessariamente. Para aplicações pequenas/médias, <code>useReducer</code> + <code>useContext</code> pode ser suficiente. Para aplicações grandes ou complexas, Redux ainda pode ser útil.</p>
+        
+        <h3>4. Como lidar com métodos de ciclo de vida com Hooks?</h3>
+        <p>A maioria dos casos pode ser tratada com <code>useEffect</code>:</p>
+        <ul>
+            <li><code>componentDidMount</code>: <code>useEffect(() =&gt; {...}, [])</code></li>
+            <li><code>componentDidUpdate</code>: <code>useEffect(() =&gt; {...})</code> (sem array ou com dependências)</li>
+            <li><code>componentWillUnmount</code>: <code>useEffect(() =&gt; { return () =&gt; {...} }, [])</code></li>
+        </ul>
+        
+        <h3>5. Posso usar vários useEffect no mesmo componente?</h3>
+        <p><strong>Sim!</strong> É uma boa prática separar efeitos não relacionados em diferentes chamadas de <code>useEffect</code>.</p>
+    </section>
+
+    <footer>
+        <p>© 2023 Guia Completo de React Hooks | Atualizado para React 18</p>
+        <p>Este guia cobre todos os Hooks incluídos no React e padrões avançados de uso.</p>
+    </footer>
+</body>
+</html>
